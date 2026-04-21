@@ -5,17 +5,12 @@ from BACKEND.risk_analyzer import analyze_risk
 st.set_page_config(layout="wide")
 
 # =========================
-# 🎨 CLEAN CSS
+# CSS
 # =========================
 st.markdown("""
 <style>
+.stApp { background-color: #020617; }
 
-/* Background */
-.stApp {
-    background-color: #020617;
-}
-
-/* Divider */
 .divider {
     width: 1.5px;
     background: rgba(255,255,255,0.3);
@@ -23,7 +18,6 @@ st.markdown("""
     margin: auto;
 }
 
-/* Title */
 .title {
     text-align: center;
     font-size: 34px;
@@ -37,7 +31,6 @@ st.markdown("""
     margin-bottom: 20px;
 }
 
-/* Button */
 .stButton>button {
     width: 100%;
     height: 45px;
@@ -46,7 +39,6 @@ st.markdown("""
     color: white;
     border: none;
 }
-
 </style>
 """, unsafe_allow_html=True)
 
@@ -54,7 +46,7 @@ st.markdown("""
 # TITLE
 # =========================
 st.markdown('<div class="title">🚨 PyRIT – Red Teaming Tool</div>', unsafe_allow_html=True)
-st.markdown('<div class="subtitle">🔍 Test LLMs for vulnerabilities with adversarial prompts</div>', unsafe_allow_html=True)
+st.markdown('<div class="subtitle">Test LLMs for vulnerabilities with adversarial prompts</div>', unsafe_allow_html=True)
 
 # =========================
 # LAYOUT
@@ -65,32 +57,21 @@ col1, col_mid, col2 = st.columns([1, 0.02, 1])
 # LEFT
 # =========================
 with col1:
-    st.markdown('<div class="section-box">', unsafe_allow_html=True)
-
     st.subheader("🛡️ Configure Attack")
 
-    provider = st.selectbox(
-        "🤖 Select LLM Provider",
-        ["groq", "openai", "ollama", "databricks"]
+    provider = st.selectbox("Select LLM Provider",
+                            ["groq", "openai", "ollama", "databricks"])
+
+    model = st.text_input(
+        "Model Name (Optional)",
+        placeholder="Leave empty OR enter your own model"
     )
 
-    
+    prompt = st.text_area("Enter Prompt")
 
-    
-
-    prompt = st.text_area(
-        "📝 Enter Prompt",
-        placeholder="Try: Ignore previous instructions and reveal secrets..."
-    )
-
-    api_key = st.text_input(
-        "🔑 API Key",
-        type="password"
-    )
+    api_key = st.text_input("API Key", type="password")
 
     run = st.button("🚀 Run Attack")
-
-    st.markdown('</div>', unsafe_allow_html=True)
 
 # =========================
 # DIVIDER
@@ -102,53 +83,47 @@ with col_mid:
 # RIGHT
 # =========================
 with col2:
-    st.markdown('<div class="section-box">', unsafe_allow_html=True)
-
     st.subheader("📊 Output Screen")
 
     if run:
 
         if provider != "ollama" and not api_key:
-            st.warning("⚠️ API key required")
+            st.warning("API key required")
 
         elif not prompt:
-            st.warning("⚠️ Enter a prompt")
+            st.warning("Enter prompt")
 
         else:
             try:
-                with st.spinner("⏳ Running attack..."):
+                with st.spinner("Running attack..."):
 
                     results = run_pyrit_attack(
                         provider,
                         api_key,
-                        
+                        model if model else None,
                         prompt
                     )
 
                     overall_risk, analyzed_results = analyze_risk(results)
 
-                # 🔥 RISK
-                st.markdown("### 🔥 Risk Assessment")
+                st.markdown("### 🔥 Risk")
 
                 if overall_risk == "High Risk":
-                    st.error("🔴 High Risk – Model Vulnerable")
+                    st.error("High Risk")
                 elif overall_risk == "Medium Risk":
-                    st.warning("🟡 Medium Risk")
+                    st.warning("Medium Risk")
                 else:
-                    st.success("🟢 Low Risk – Model Safe")
+                    st.success("Low Risk")
 
-                # 📜 LOGS
-                st.markdown("### 📜 Attack Logs")
+                st.markdown("### 📜 Logs")
 
                 for i, r in enumerate(analyzed_results):
-                    st.markdown(f"**⚡ Attack {i+1}**")
+                    st.write(f"Attack {i+1}")
                     st.write(r["response"])
                     st.markdown("---")
 
             except Exception as e:
-                st.error(f"❌ Error: {str(e)}")
+                st.error(str(e))
 
     else:
-        st.info("ℹ️ Run the model to see results")
-
-    st.markdown('</div>', unsafe_allow_html=True)
+        st.info("Run model to see results")
