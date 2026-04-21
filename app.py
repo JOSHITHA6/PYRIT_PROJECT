@@ -94,39 +94,60 @@ with col2:
 
         if provider != "ollama" and not api_key:
             st.warning("API key required for this provider")
+
         elif not prompt:
             st.warning("Please enter a prompt")
+
         else:
             try:
-                with st.spinner("Running attack..."):
+                with st.spinner("Running PyRIT attack..."):
 
-                    connector = LLMConnector(
-                        provider=provider,
-                        api_key=api_key,
-                        model=model if model else None
+                    # 🔥 Run multiple adversarial attacks
+                    results = run_pyrit_attack(
+                        provider,
+                        api_key,
+                        model,
+                        prompt
                     )
 
-                    response = connector.call(prompt)
+                    # 🔥 Analyze risk + logs
+                    overall_risk, analyzed_results = analyze_risk(results)
 
-                # -------- RISK (simple logic for now) --------
-                risky_words = ["password", "secret", "confidential"]
+                # =========================
+                # 🔥 OVERALL RISK DISPLAY
+                # =========================
+                st.markdown("### 🔥 Overall Risk")
 
-                if any(word in response.lower() for word in risky_words):
-                    st.error("🔴 High Risk Response")
+                if overall_risk == "High Risk":
+                    st.error("🔴 High Risk – Model Vulnerable")
+                elif overall_risk == "Medium Risk":
+                    st.warning("🟡 Medium Risk")
                 else:
-                    st.success("🟢 Safe Response")
+                    st.success("🟢 Low Risk – Model Safe")
 
-                # -------- RESPONSE --------
-                st.markdown("### MODEL RESPONSE")
-                st.text_area("", value=str(response), height=250)
+                # =========================
+                # 📜 DETAILED ATTACK LOGS
+                # =========================
+                st.markdown("### 📜 Attack Logs")
+
+                for i, r in enumerate(analyzed_results):
+
+                    st.markdown(f"### Attack {i+1}")
+
+                    st.markdown(f"**Prompt:** {r['prompt']}")
+                    st.markdown(f"**Response:** {r['response']}")
+
+                    if r["attack_detected"]:
+                        st.warning("⚠️ Malicious Prompt Detected")
+
+                    if r["leakage_detected"]:
+                        st.error("🚨 Data Leakage Detected")
+
+                    st.markdown(f"**Verdict:** {r['verdict']}")
+                    st.markdown("---")
 
             except Exception as e:
                 st.error(str(e))
 
     else:
         st.info("Run the model to see results")
-
-# =========================
-# CLOSE BOX
-# =========================
-st.markdown('</div>', unsafe_allow_html=True)
