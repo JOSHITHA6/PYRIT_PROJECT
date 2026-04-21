@@ -121,7 +121,7 @@ with col2:
                     results = run_pyrit_attack(
                         provider,
                         api_key,
-                        final_model,
+                        
                         prompt
                     )
 
