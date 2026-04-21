@@ -66,10 +66,11 @@ with col1:
         "Model Name (Optional)",
         placeholder="Leave empty OR enter your own model"
     )
+    api_key = st.text_input("API Key", type="password")
 
     prompt = st.text_area("Enter Prompt")
 
-    api_key = st.text_input("API Key", type="password")
+    
 
     run = st.button("🚀 Run Attack")
 
