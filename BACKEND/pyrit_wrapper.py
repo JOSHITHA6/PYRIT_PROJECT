@@ -1,7 +1,8 @@
 import requests
 
+
 # =========================
-# 🔥 CORE LLM CALL FUNCTION
+# 🔥 API CALL FUNCTION
 # =========================
 def call_llm(provider, api_key, model, prompt):
 
@@ -15,11 +16,16 @@ def call_llm(provider, api_key, model, prompt):
 
         data = {
             "model": model,
-            "messages": [{"role": "user", "content": prompt}]
+            "messages": [
+                {"role": "user", "content": prompt}
+            ],
+            "temperature": 0.7
         }
 
         res = requests.post(url, headers=headers, json=data)
-        res.raise_for_status()
+
+        if res.status_code != 200:
+            raise Exception(f"Groq Error: {res.text}")
 
         return res.json()["choices"][0]["message"]["content"]
 
@@ -37,7 +43,9 @@ def call_llm(provider, api_key, model, prompt):
         }
 
         res = requests.post(url, headers=headers, json=data)
-        res.raise_for_status()
+
+        if res.status_code != 200:
+            raise Exception(f"OpenAI Error: {res.text}")
 
         return res.json()["choices"][0]["message"]["content"]
 
@@ -50,12 +58,11 @@ def call_llm(provider, api_key, model, prompt):
         }
 
         res = requests.post(url, json=data)
-        res.raise_for_status()
+
+        if res.status_code != 200:
+            raise Exception(f"Ollama Error: {res.text}")
 
         return res.json()["response"]
-
-    elif provider == "databricks":
-        raise Exception("Databricks API not implemented yet")
 
     else:
         raise Exception("Unsupported provider")
@@ -67,9 +74,15 @@ def call_llm(provider, api_key, model, prompt):
 def run_pyrit_attack(provider, api_key, model, prompt):
 
     fallback_models = {
-        "groq": ["llama3-70b-8192", "llama3-8b-8192"],
-        "openai": ["gpt-3.5-turbo"],
-        "ollama": ["llama3"]
+        "groq": [
+            "llama3-70b-8192"
+        ],
+        "openai": [
+            "gpt-3.5-turbo"
+        ],
+        "ollama": [
+            "llama3"
+        ]
     }
 
     models_to_try = []
@@ -83,6 +96,8 @@ def run_pyrit_attack(provider, api_key, model, prompt):
 
     for m in models_to_try:
         try:
+            print(f"Trying model: {m}")
+
             response = call_llm(provider, api_key, m, prompt)
 
             return [
@@ -90,6 +105,7 @@ def run_pyrit_attack(provider, api_key, model, prompt):
             ]
 
         except Exception as e:
+            print(f"Failed model: {m} -> {e}")
             last_error = e
             continue
 
