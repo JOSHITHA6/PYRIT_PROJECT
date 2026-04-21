@@ -2,10 +2,13 @@ import streamlit as st
 from BACKEND.pyrit_wrapper import run_pyrit_attack
 from BACKEND.risk_analyzer import analyze_risk
 
+# =========================
+# CONFIG
+# =========================
 st.set_page_config(layout="wide")
 
 # =========================
-# 🎨 CSS (FIXED NEON UI)
+# 🎨 PYRIT COLOR THEME ONLY (NO COMPLEX DIVS)
 # =========================
 st.markdown("""
 <style>
@@ -15,62 +18,52 @@ st.markdown("""
     background-color: #020617;
 }
 
-/* OUTER MAIN CONTAINER (NEON BORDER) */
-.block-container {
-    border: 2px solid rgba(56,189,248,0.4);
-    border-radius: 18px;
-    padding: 2rem;
-    box-shadow: 0 0 25px rgba(56,189,248,0.6),
-                0 0 45px rgba(192,132,252,0.4);
+/* Titles */
+h1, h2, h3 {
+    color: #e2e8f0;
 }
 
-/* INNER BOXES */
-.section-box {
-    padding: 20px;
-    border-radius: 14px;
-    background: #0f172a;
-    border: 1px solid rgba(255,255,255,0.08);
-}
-
-/* DIVIDER */
-.divider {
-    border-left: 2px solid rgba(255,255,255,0.2);
-    height: 100%;
-}
-
-/* TITLE */
-.title {
-    text-align: center;
-    font-size: 42px;
-    font-weight: bold;
-    background: linear-gradient(90deg, #38bdf8, #c084fc);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-/* SUBTITLE */
-.subtitle {
-    text-align: center;
+/* Subtext */
+p {
     color: #94a3b8;
-    margin-bottom: 20px;
 }
 
-/* BUTTON */
+/* Divider column */
+[data-testid="column"]:nth-child(2) {
+    border-left: 2px solid rgba(255,255,255,0.15);
+}
+
+/* Button */
 .stButton>button {
-    width: 100%;
-    height: 48px;
-    border-radius: 10px;
-    font-size: 16px;
-    font-weight: bold;
     background: linear-gradient(90deg, #38bdf8, #c084fc);
     color: white;
+    border-radius: 10px;
+    height: 45px;
+    font-weight: bold;
     border: none;
-    box-shadow: 0 0 12px rgba(56,189,248,0.6);
 }
 
 .stButton>button:hover {
-    transform: scale(1.03);
-    box-shadow: 0 0 18px rgba(192,132,252,0.8);
+    box-shadow: 0 0 12px rgba(192,132,252,0.6);
+    transform: scale(1.02);
+}
+
+/* Inputs */
+.stTextInput input, .stTextArea textarea {
+    background-color: #0f172a;
+    color: white;
+    border-radius: 8px;
+}
+
+/* Select */
+.stSelectbox div {
+    background-color: #0f172a;
+    color: white;
+}
+
+/* Info / messages */
+.stAlert {
+    border-radius: 10px;
 }
 
 </style>
@@ -79,21 +72,19 @@ st.markdown("""
 # =========================
 # TITLE
 # =========================
-st.markdown('<div class="title">PyRIT – Red Teaming Tool</div>', unsafe_allow_html=True)
-st.markdown('<div class="subtitle">Test LLMs for vulnerabilities with adversarial prompts</div>', unsafe_allow_html=True)
+st.title("🔐 PyRIT – Red Teaming Tool")
+st.caption("Test LLMs for vulnerabilities with adversarial prompts")
 
 # =========================
-# LAYOUT
+# LAYOUT (SHAP STYLE)
 # =========================
-col1, col_mid, col2 = st.columns([1, 0.03, 1])
+col1, col2 = st.columns([1, 1])
 
 # =========================
-# LEFT PANEL (INPUT)
+# LEFT SIDE (INPUT)
 # =========================
 with col1:
-    st.markdown('<div class="section-box">', unsafe_allow_html=True)
-
-    st.subheader("🛡️ CONFIGURE ATTACK")
+    st.subheader("🛡️ Configure Attack")
 
     provider = st.selectbox(
         "Select the LLM",
@@ -118,21 +109,12 @@ with col1:
 
     run = st.button("🚀 Run Attack")
 
-    st.markdown('</div>', unsafe_allow_html=True)
 
 # =========================
-# CENTER DIVIDER
-# =========================
-with col_mid:
-    st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
-
-# =========================
-# RIGHT PANEL (OUTPUT)
+# RIGHT SIDE (OUTPUT)
 # =========================
 with col2:
-    st.markdown('<div class="section-box">', unsafe_allow_html=True)
-
-    st.subheader("💻 OUTPUT SCREEN")
+    st.subheader("💻 Output Screen")
 
     if run:
 
@@ -155,7 +137,7 @@ with col2:
 
                     overall_risk, analyzed_results = analyze_risk(results)
 
-                # 🔥 RISK DISPLAY
+                # -------- RISK --------
                 st.markdown("### 🔥 Overall Risk")
 
                 if overall_risk == "High Risk":
@@ -165,11 +147,11 @@ with col2:
                 else:
                     st.success("🟢 Low Risk – Model Safe")
 
-                # 📜 LOGS
+                # -------- LOGS --------
                 st.markdown("### 📜 Attack Logs")
 
                 for i, r in enumerate(analyzed_results):
-                    st.markdown(f"### Attack {i+1}")
+                    st.markdown(f"**Attack {i+1}**")
                     st.write(r["response"])
                     st.markdown("---")
 
@@ -178,5 +160,3 @@ with col2:
 
     else:
         st.info("Run the model to see results")
-
-    st.markdown('</div>', unsafe_allow_html=True)
