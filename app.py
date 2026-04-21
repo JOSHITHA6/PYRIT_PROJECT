@@ -84,7 +84,7 @@ with col_mid:
 # RIGHT
 # =========================
 with col2:
-    st.subheader("📊 Output Screen")
+    st.subheader("📊 Output")
 
     if run:
 
