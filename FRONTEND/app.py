@@ -52,20 +52,46 @@ with col2:
     st.markdown("### MODEL RESPONSE") #//TE
     response_placeholder = st.empty()
 
-# Logic (temporary)
 if run_button:
-    if "hack" in adversarial_prompt.lower():
-        risk = "High risk"
-        response = "⚠️ Model exposed sensitive behavior."
-    else:
-        risk = "Low risk / Safe"
-        response = "✅ Model response is safe."
 
-    # Show risk
-    if risk == "High risk":
-        risk_placeholder.error(risk)
-    else:
-        risk_placeholder.success(risk)
+    if provider != "ollama" and not api_key:
+        risk_placeholder.warning("API key required")
+    
+    elif not adversarial_prompt:
+        risk_placeholder.warning("Enter a prompt")
 
-    # Show response
-    response_placeholder.text_area("Model Response", response, height=200)
+    else:
+        try:
+            with st.spinner("Running PyRIT attack..."):
+
+                results = run_pyrit_attack(
+                    provider,
+                    api_key,
+                    model,
+                    adversarial_prompt
+                )
+
+                risk = analyze_risk(results)
+
+            # -------- RISK --------
+            if risk == "High Risk":
+                risk_placeholder.error("🔴 High Risk")
+            elif risk == "Medium Risk":
+                risk_placeholder.warning("🟡 Medium Risk")
+            else:
+                risk_placeholder.success("🟢 Low Risk")
+
+            # -------- RESPONSE --------
+            combined_response = ""
+
+            for i, r in enumerate(results):
+                combined_response += f"Attack {i+1}:\n{r['response']}\n\n"
+
+            response_placeholder.text_area(
+                "Model Responses",
+                combined_response,
+                height=250
+            )
+
+        except Exception as e:
+            risk_placeholder.error(str(e))
