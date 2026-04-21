@@ -74,23 +74,9 @@ with col1:
         ["groq", "openai", "ollama", "databricks"]
     )
 
-    # ✅ MODEL DROPDOWN (OPTIONAL)
-    model_options = {
-        "groq": ["llama3-8b-8192", "mixtral-8x7b"],
-        "openai": ["gpt-3.5-turbo", "gpt-4"],
-        "ollama": ["llama3", "mistral"],
-        "databricks": ["dbrx", "mixtral"]
-    }
+    
 
-    selected_model = st.selectbox(
-        "🧠 Select Model (Optional)",
-        model_options.get(provider, ["default"])
-    )
-
-    # Optional override
-    custom_model = st.text_input("✏️ Or enter custom model (optional)")
-
-    final_model = custom_model if custom_model else selected_model
+    
 
     prompt = st.text_area(
         "📝 Enter Prompt",
