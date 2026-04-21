@@ -74,16 +74,17 @@ def call_llm(provider, api_key, model, prompt):
 def run_pyrit_attack(provider, api_key, model, prompt):
 
     fallback_models = {
-        "groq": [
-            "llama3-70b-8192"
-        ],
-        "openai": [
-            "gpt-3.5-turbo"
-        ],
-        "ollama": [
-            "llama3"
-        ]
-    }
+    "groq": [
+        "llama-3.1-8b-instant",     # ✅ works
+        "llama-3.1-70b-versatile"   # ✅ works
+    ],
+    "openai": [
+        "gpt-3.5-turbo"
+    ],
+    "ollama": [
+        "llama3"
+    ]
+}
 
     models_to_try = []
 
