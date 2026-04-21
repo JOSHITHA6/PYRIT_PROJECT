@@ -8,62 +8,42 @@ from BACKEND.risk_analyzer import analyze_risk
 st.set_page_config(layout="wide")
 
 # =========================
-# 🎨 PYRIT COLOR THEME ONLY (NO COMPLEX DIVS)
+# 🎨 CLEAN CSS (NO NEON)
 # =========================
 st.markdown("""
 <style>
 
-/* Background */
+/* Page */
 .stApp {
-    background-color: #020617;
+    background-color: #f5f7fa;
 }
 
-/* Titles */
-h1, h2, h3 {
-    color: #e2e8f0;
+/* Input + Output BOX */
+.box {
+    border: 1px solid #d1d5db;
+    border-radius: 12px;
+    padding: 20px;
+    background-color: white;
 }
 
-/* Subtext */
-p {
-    color: #94a3b8;
-}
-
-/* Divider column */
-[data-testid="column"]:nth-child(2) {
-    border-left: 2px solid rgba(255,255,255,0.15);
+/* Divider */
+.divider {
+    border-left: 2px solid #d1d5db;
+    height: 100%;
+    margin: auto;
 }
 
 /* Button */
 .stButton>button {
-    background: linear-gradient(90deg, #38bdf8, #c084fc);
+    background-color: #2563eb;
     color: white;
-    border-radius: 10px;
+    border-radius: 8px;
     height: 45px;
-    font-weight: bold;
-    border: none;
+    font-weight: 500;
 }
 
 .stButton>button:hover {
-    box-shadow: 0 0 12px rgba(192,132,252,0.6);
-    transform: scale(1.02);
-}
-
-/* Inputs */
-.stTextInput input, .stTextArea textarea {
-    background-color: #0f172a;
-    color: white;
-    border-radius: 8px;
-}
-
-/* Select */
-.stSelectbox div {
-    background-color: #0f172a;
-    color: white;
-}
-
-/* Info / messages */
-.stAlert {
-    border-radius: 10px;
+    background-color: #1e40af;
 }
 
 </style>
@@ -76,14 +56,16 @@ st.title("🔐 PyRIT – Red Teaming Tool")
 st.caption("Test LLMs for vulnerabilities with adversarial prompts")
 
 # =========================
-# LAYOUT (SHAP STYLE)
+# LAYOUT
 # =========================
-col1, col2 = st.columns([1, 1])
+col1, col_mid, col2 = st.columns([1, 0.05, 1])
 
 # =========================
-# LEFT SIDE (INPUT)
+# LEFT (INPUT)
 # =========================
 with col1:
+    st.markdown('<div class="box">', unsafe_allow_html=True)
+
     st.subheader("🛡️ Configure Attack")
 
     provider = st.selectbox(
@@ -109,11 +91,20 @@ with col1:
 
     run = st.button("🚀 Run Attack")
 
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # =========================
-# RIGHT SIDE (OUTPUT)
+# DIVIDER
+# =========================
+with col_mid:
+    st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
+
+# =========================
+# RIGHT (OUTPUT)
 # =========================
 with col2:
+    st.markdown('<div class="box">', unsafe_allow_html=True)
+
     st.subheader("💻 Output Screen")
 
     if run:
@@ -141,11 +132,11 @@ with col2:
                 st.markdown("### 🔥 Overall Risk")
 
                 if overall_risk == "High Risk":
-                    st.error("🔴 High Risk – Model Weak")
+                    st.error("High Risk – Model Weak")
                 elif overall_risk == "Medium Risk":
-                    st.warning("🟡 Medium Risk")
+                    st.warning("Medium Risk")
                 else:
-                    st.success("🟢 Low Risk – Model Safe")
+                    st.success("Low Risk – Model Safe")
 
                 # -------- LOGS --------
                 st.markdown("### 📜 Attack Logs")
@@ -160,3 +151,5 @@ with col2:
 
     else:
         st.info("Run the model to see results")
+
+    st.markdown('</div>', unsafe_allow_html=True)
