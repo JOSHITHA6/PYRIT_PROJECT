@@ -102,8 +102,11 @@ def run_pyrit_attack(provider, api_key, model, prompt):
             response = call_llm(provider, api_key, m, prompt)
 
             return [
-                {"response": response}
-            ]
+    {
+        "attack_prompt": prompt,
+        "response": response
+    }
+]
 
         except Exception as e:
             print(f"Failed model: {m} -> {e}")
