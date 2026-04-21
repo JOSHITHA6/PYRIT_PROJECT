@@ -16,27 +16,8 @@ st.markdown("""
 }
 
 /* 🔥 DO NOT STYLE block-container heavily */
-.block-container {
-    max-width: 1000px;
-    margin: auto;
-    padding-top: 2rem;
-}
 
-/* SINGLE OUTER BORDER (SAFE WAY) */
-.main-wrapper {
-    border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 16px;
-    padding: 25px;
-    background: rgba(15,23,42,0.6);
-}
 
-/* INNER SECTIONS */
-.section-box {
-    padding: 18px;
-    border-radius: 12px;
-    background: rgba(15,23,42,0.8);
-    border: 1px solid rgba(255,255,255,0.08);
-}
 
 /* CLEAN DIVIDER */
 .divider {
