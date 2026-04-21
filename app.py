@@ -5,75 +5,75 @@ from BACKEND.risk_analyzer import analyze_risk
 st.set_page_config(layout="wide")
 
 # =========================
-# GLOBAL STYLES (NEON UI)
+# 🎨 PREMIUM UI CSS
 # =========================
 st.markdown("""
 <style>
 
-/* Page */
-body {
-    background-color: #0f172a;
+/* Background */
+.stApp {
+    background: radial-gradient(circle at top, #0f172a, #020617);
 }
 
-/* Outer Neon Box */
-.main-box {
-    padding: 30px;
-    border-radius: 20px;
-    background: #0b1220;
-    border: 2px solid transparent;
-    background-clip: padding-box;
-    box-shadow: 0 0 25px rgba(0, 123, 255, 0.4),
-                0 0 35px rgba(255, 0, 255, 0.2);
-}
-
-/* Divider */
-.divider {
-    border-left: 2px solid rgba(255,255,255,0.15);
-    height: 100%;
+/* CENTER CONTAINER */
+.block-container {
+    max-width: 1100px;
     margin: auto;
+    margin-top: 60px;
 }
 
-/* Section Boxes */
+/* GLASS CARD */
 .section-box {
-    padding: 20px;
-    border-radius: 15px;
-    background: #111827;
+    padding: 25px;
+    border-radius: 16px;
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(12px);
     border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
 }
 
-/* Titles */
+/* DIVIDER */
+.divider {
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(to bottom, #38bdf8, #c084fc);
+    margin: auto;
+    border-radius: 10px;
+}
+
+/* TITLE */
 .title {
     text-align: center;
-    font-size: 42px;
+    font-size: 40px;
     font-weight: bold;
     background: linear-gradient(90deg, #38bdf8, #c084fc);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
+/* SUBTITLE */
 .subtitle {
     text-align: center;
-    color: #9ca3af;
+    color: #94a3b8;
     margin-bottom: 30px;
 }
 
-/* Run Button */
+/* BUTTON */
 .stButton>button {
     width: 100%;
-    height: 50px;
-    border-radius: 12px;
+    height: 48px;
+    border-radius: 10px;
     font-size: 16px;
     font-weight: bold;
-    border: none;
     background: linear-gradient(90deg, #38bdf8, #c084fc);
     color: white;
-    box-shadow: 0 0 12px rgba(56,189,248,0.6);
-    transition: 0.3s;
+    border: none;
+    transition: 0.2s;
 }
 
 .stButton>button:hover {
     transform: scale(1.03);
-    box-shadow: 0 0 18px rgba(192,132,252,0.8);
+    box-shadow: 0 0 12px rgba(192,132,252,0.6);
 }
 
 </style>
@@ -86,19 +86,17 @@ st.markdown('<div class="title">PyRIT – Red Teaming Tool</div>', unsafe_allow_
 st.markdown('<div class="subtitle">Test LLMs for vulnerabilities with adversarial prompts</div>', unsafe_allow_html=True)
 
 # =========================
-# MAIN BOX
+# LAYOUT
 # =========================
-st.markdown('<div class="main-box">', unsafe_allow_html=True)
-
-col1, col_mid, col2 = st.columns([1, 0.05, 1])
+col1, col_mid, col2 = st.columns([1, 0.03, 1])
 
 # =========================
-# LEFT SIDE (INPUT)
+# LEFT (INPUT)
 # =========================
 with col1:
     st.markdown('<div class="section-box">', unsafe_allow_html=True)
 
-    st.subheader("🛡️ CONFIGURE ATTACK")
+    st.subheader("🛡️ Configure Attack")
 
     provider = st.selectbox(
         "Select the LLM",
@@ -125,29 +123,27 @@ with col1:
 
     st.markdown('</div>', unsafe_allow_html=True)
 
-
 # =========================
 # DIVIDER
 # =========================
 with col_mid:
     st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
 
-
 # =========================
-# RIGHT SIDE (OUTPUT)
+# RIGHT (OUTPUT)
 # =========================
 with col2:
     st.markdown('<div class="section-box">', unsafe_allow_html=True)
 
-    st.subheader("💻 OUTPUT SCREEN")
+    st.subheader("💻 Output Screen")
 
     if run:
 
         if provider != "ollama" and not api_key:
-            st.warning("API key required for this provider")
+            st.warning("API key required")
 
         elif not prompt:
-            st.warning("Please enter a prompt")
+            st.warning("Enter a prompt")
 
         else:
             try:
@@ -166,7 +162,7 @@ with col2:
                 st.markdown("### 🔥 Overall Risk")
 
                 if overall_risk == "High Risk":
-                    st.error("🔴 High Risk – Model Vulnerable")
+                    st.error("🔴 High Risk – Model Weak")
                 elif overall_risk == "Medium Risk":
                     st.warning("🟡 Medium Risk")
                 else:
@@ -176,18 +172,8 @@ with col2:
                 st.markdown("### 📜 Attack Logs")
 
                 for i, r in enumerate(analyzed_results):
-
                     st.markdown(f"### Attack {i+1}")
-                    st.markdown(f"**Prompt:** {r['prompt']}")
-                    st.markdown(f"**Response:** {r['response']}")
-
-                    if r["attack_detected"]:
-                        st.warning("⚠️ Malicious Prompt Detected")
-
-                    if r["leakage_detected"]:
-                        st.error("🚨 Data Leakage Detected")
-
-                    st.markdown(f"**Verdict:** {r['verdict']}")
+                    st.write(r["response"])
                     st.markdown("---")
 
             except Exception as e:
@@ -197,8 +183,3 @@ with col2:
         st.info("Run the model to see results")
 
     st.markdown('</div>', unsafe_allow_html=True)
-
-# =========================
-# CLOSE MAIN BOX
-# =========================
-st.markdown('</div>', unsafe_allow_html=True)
