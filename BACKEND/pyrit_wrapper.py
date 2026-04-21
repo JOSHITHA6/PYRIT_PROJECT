@@ -1,4 +1,4 @@
-from backend.llm_connector import LLMConnector
+from BACKEND.llm_connector import LLMConnector
 
 def run_pyrit_attack(provider, api_key, model, prompt):
 
