@@ -5,40 +5,45 @@ from BACKEND.risk_analyzer import analyze_risk
 st.set_page_config(layout="wide")
 
 # =========================
-# 🎨 PREMIUM UI CSS
+# 🎨 CLEAN PREMIUM CSS
 # =========================
 st.markdown("""
 <style>
 
 /* Background */
 .stApp {
-    background: radial-gradient(circle at top, #0f172a, #020617);
+    background: #020617;
 }
 
-/* CENTER CONTAINER */
+/* 🔥 REMOVE DEFAULT BLOCK EFFECT (THIS FIXES TOP BOX ISSUE) */
 .block-container {
+    padding-top: 2rem;
     max-width: 1100px;
     margin: auto;
-    margin-top: 60px;
 }
 
-/* GLASS CARD */
+/* 🔥 OUTER CONTAINER */
+.outer-box {
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 18px;
+    padding: 30px;
+    background: rgba(15, 23, 42, 0.6);
+}
+
+/* INNER CARDS */
 .section-box {
-    padding: 25px;
-    border-radius: 16px;
+    padding: 20px;
+    border-radius: 14px;
     background: rgba(15, 23, 42, 0.7);
-    backdrop-filter: blur(12px);
     border: 1px solid rgba(255,255,255,0.08);
-    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
 }
 
-/* DIVIDER */
+/* 🔥 CLEAN DIVIDER */
 .divider {
     width: 2px;
+    background: rgba(255,255,255,0.2);
     height: 100%;
-    background: linear-gradient(to bottom, #38bdf8, #c084fc);
     margin: auto;
-    border-radius: 10px;
 }
 
 /* TITLE */
@@ -46,34 +51,24 @@ st.markdown("""
     text-align: center;
     font-size: 40px;
     font-weight: bold;
-    background: linear-gradient(90deg, #38bdf8, #c084fc);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #e2e8f0;
 }
 
 /* SUBTITLE */
 .subtitle {
     text-align: center;
     color: #94a3b8;
-    margin-bottom: 30px;
+    margin-bottom: 25px;
 }
 
 /* BUTTON */
 .stButton>button {
     width: 100%;
-    height: 48px;
+    height: 45px;
     border-radius: 10px;
-    font-size: 16px;
-    font-weight: bold;
     background: linear-gradient(90deg, #38bdf8, #c084fc);
     color: white;
     border: none;
-    transition: 0.2s;
-}
-
-.stButton>button:hover {
-    transform: scale(1.03);
-    box-shadow: 0 0 12px rgba(192,132,252,0.6);
 }
 
 </style>
@@ -86,12 +81,14 @@ st.markdown('<div class="title">PyRIT – Red Teaming Tool</div>', unsafe_allow_
 st.markdown('<div class="subtitle">Test LLMs for vulnerabilities with adversarial prompts</div>', unsafe_allow_html=True)
 
 # =========================
-# LAYOUT
+# 🔥 OUTER WRAPPER START
 # =========================
+st.markdown('<div class="outer-box">', unsafe_allow_html=True)
+
 col1, col_mid, col2 = st.columns([1, 0.03, 1])
 
 # =========================
-# LEFT (INPUT)
+# LEFT
 # =========================
 with col1:
     st.markdown('<div class="section-box">', unsafe_allow_html=True)
@@ -103,21 +100,11 @@ with col1:
         ["groq", "openai", "ollama", "databricks"]
     )
 
-    prompt = st.text_area(
-        "Enter the Prompt",
-        placeholder="Enter your adversarial prompt here..."
-    )
+    prompt = st.text_area("Enter the Prompt")
 
-    api_key = st.text_input(
-        "Enter API Key",
-        type="password",
-        placeholder="Required for most providers"
-    )
+    api_key = st.text_input("Enter API Key", type="password")
 
-    model = st.text_input(
-        "Model Name (Optional)",
-        placeholder="e.g. llama3-8b-8192 / gpt-3.5-turbo"
-    )
+    model = st.text_input("Model Name (Optional)")
 
     run = st.button("🚀 Run Attack")
 
@@ -130,7 +117,7 @@ with col_mid:
     st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
 
 # =========================
-# RIGHT (OUTPUT)
+# RIGHT
 # =========================
 with col2:
     st.markdown('<div class="section-box">', unsafe_allow_html=True)
@@ -147,7 +134,7 @@ with col2:
 
         else:
             try:
-                with st.spinner("Running PyRIT attack..."):
+                with st.spinner("Running attack..."):
 
                     results = run_pyrit_attack(
                         provider,
@@ -158,21 +145,15 @@ with col2:
 
                     overall_risk, analyzed_results = analyze_risk(results)
 
-                # -------- RISK --------
-                st.markdown("### 🔥 Overall Risk")
-
                 if overall_risk == "High Risk":
-                    st.error("🔴 High Risk – Model Weak")
+                    st.error("High Risk – Model Weak")
                 elif overall_risk == "Medium Risk":
-                    st.warning("🟡 Medium Risk")
+                    st.warning("Medium Risk")
                 else:
-                    st.success("🟢 Low Risk – Model Safe")
-
-                # -------- LOGS --------
-                st.markdown("### 📜 Attack Logs")
+                    st.success("Low Risk – Model Safe")
 
                 for i, r in enumerate(analyzed_results):
-                    st.markdown(f"### Attack {i+1}")
+                    st.markdown(f"**Attack {i+1}**")
                     st.write(r["response"])
                     st.markdown("---")
 
@@ -183,3 +164,8 @@ with col2:
         st.info("Run the model to see results")
 
     st.markdown('</div>', unsafe_allow_html=True)
+
+# =========================
+# 🔥 OUTER WRAPPER END
+# =========================
+st.markdown('</div>', unsafe_allow_html=True)
