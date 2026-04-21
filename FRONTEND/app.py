@@ -10,37 +10,36 @@ st.set_page_config(layout="wide")
 st.markdown("""
 <style>
 
-/* Background */
-body {
+/* 🌌 FULL PAGE BACKGROUND */
+.stApp {
     background-color: #020617;
 }
 
-/* MAIN OUTER NEON BOX */
-.outer-container {
-    padding: 25px;
+/* 🔥 TARGET STREAMLIT MAIN CONTAINER (IMPORTANT FIX) */
+.block-container {
+    padding: 2rem 2rem;
     border-radius: 18px;
-    background: #020617;
     border: 2px solid rgba(56,189,248,0.4);
-    box-shadow: 0 0 20px rgba(56,189,248,0.6),
-                0 0 40px rgba(192,132,252,0.4);
+    box-shadow: 0 0 25px rgba(56,189,248,0.6),
+                0 0 45px rgba(192,132,252,0.4);
+    background-color: #020617;
 }
 
-/* LEFT + RIGHT CARDS */
-.inner-box {
+/* 🧱 INNER BOXES */
+.section-box {
     padding: 20px;
-    border-radius: 15px;
+    border-radius: 14px;
     background: #0f172a;
     border: 1px solid rgba(255,255,255,0.08);
 }
 
-/* DIVIDER */
+/* ➖ DIVIDER */
 .divider {
     border-left: 2px solid rgba(255,255,255,0.15);
     height: 100%;
-    margin: auto;
 }
 
-/* TITLE */
+/* 🎯 TITLE */
 .title {
     text-align: center;
     font-size: 42px;
@@ -50,17 +49,18 @@ body {
     -webkit-text-fill-color: transparent;
 }
 
+/* 🧾 SUBTITLE */
 .subtitle {
     text-align: center;
     color: #94a3b8;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
 }
 
-/* BUTTON */
+/* 🚀 BUTTON */
 .stButton>button {
     width: 100%;
-    height: 50px;
-    border-radius: 12px;
+    height: 48px;
+    border-radius: 10px;
     font-size: 16px;
     font-weight: bold;
     background: linear-gradient(90deg, #38bdf8, #c084fc);
@@ -76,53 +76,6 @@ body {
 
 </style>
 """, unsafe_allow_html=True)
-
-# =========================
-# TITLE
-# =========================
-st.markdown('<div class="title">PyRIT – Red Teaming Tool</div>', unsafe_allow_html=True)
-st.markdown('<div class="subtitle">Test LLMs for vulnerabilities with adversarial prompts</div>', unsafe_allow_html=True)
-
-# =========================
-# 🔥 OUTER NEON BOX START
-# =========================
-st.markdown('<div class="outer-container">', unsafe_allow_html=True)
-
-col1, col_mid, col2 = st.columns([1, 0.03, 1])
-
-# =========================
-# LEFT PANEL
-# =========================
-with col1:
-    st.markdown('<div class="inner-box">', unsafe_allow_html=True)
-
-    st.subheader("🛡️ CONFIGURE ATTACK")
-
-    provider = st.selectbox("Select the LLM",
-                            ["groq", "openai", "ollama", "databricks"])
-
-    prompt = st.text_area("Enter the Prompt",
-                          placeholder="Enter your adversarial prompt here...")
-
-    api_key = st.text_input("Enter API Key",
-                            type="password",
-                            placeholder="Required for most providers")
-
-    model = st.text_input("Model Name (Optional)",
-                          placeholder="e.g. llama3-8b-8192 / gpt-3.5-turbo")
-
-    run = st.button("🚀 Run Attack")
-
-    st.markdown('</div>', unsafe_allow_html=True)
-
-
-# =========================
-# DIVIDER
-# =========================
-with col_mid:
-    st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
-
-
 # =========================
 # RIGHT PANEL
 # =========================
