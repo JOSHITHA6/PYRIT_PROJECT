@@ -2,3 +2,6 @@ streamlit
 requests
 groq
 openai
+google-generativeai
+
+
