@@ -1,5 +1,5 @@
 import streamlit as st
-from backend.llm_connector import LLMConnector
+from BACKEND.llm_connector import LLMConnector
 
 st.set_page_config(layout="wide")
 
