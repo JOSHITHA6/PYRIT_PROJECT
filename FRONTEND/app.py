@@ -8,7 +8,7 @@ from BACKEND.risk_analyzer import analyze_risk
 st.set_page_config(layout="wide")
 
 # =========================
-# 🎨 CLEAN CSS (NO NEON)
+# 🎨 CLEAN CSS (NO NEON, NO BUGS)
 # =========================
 st.markdown("""
 <style>
@@ -18,32 +18,26 @@ st.markdown("""
     background-color: #f5f7fa;
 }
 
-/* Input + Output BOX */
+/* Box styling */
 .box {
     border: 1px solid #d1d5db;
-    border-radius: 12px;
+    border-radius: 10px;
     padding: 20px;
     background-color: white;
 }
 
-/* Divider */
+/* Divider line */
 .divider {
-    border-left: 2px solid #d1d5db;
+    border-left: 2px solid #9ca3af;
     height: 100%;
-    margin: auto;
 }
 
 /* Button */
 .stButton>button {
     background-color: #2563eb;
     color: white;
-    border-radius: 8px;
-    height: 45px;
-    font-weight: 500;
-}
-
-.stButton>button:hover {
-    background-color: #1e40af;
+    border-radius: 6px;
+    height: 40px;
 }
 
 </style>
@@ -52,13 +46,13 @@ st.markdown("""
 # =========================
 # TITLE
 # =========================
-st.title("🔐 PyRIT – Red Teaming Tool")
+st.title("PyRIT – Red Teaming Tool")
 st.caption("Test LLMs for vulnerabilities with adversarial prompts")
 
 # =========================
 # LAYOUT
 # =========================
-col1, col_mid, col2 = st.columns([1, 0.05, 1])
+col1, col_mid, col2 = st.columns([1, 0.02, 1])
 
 # =========================
 # LEFT (INPUT)
@@ -66,7 +60,7 @@ col1, col_mid, col2 = st.columns([1, 0.05, 1])
 with col1:
     st.markdown('<div class="box">', unsafe_allow_html=True)
 
-    st.subheader("🛡️ Configure Attack")
+    st.subheader("Configure Attack")
 
     provider = st.selectbox(
         "Select the LLM",
@@ -80,16 +74,14 @@ with col1:
 
     api_key = st.text_input(
         "Enter API Key",
-        type="password",
-        placeholder="Required for most providers"
+        type="password"
     )
 
     model = st.text_input(
-        "Model Name (Optional)",
-        placeholder="e.g. llama3-8b-8192 / gpt-3.5-turbo"
+        "Model Name (Optional)"
     )
 
-    run = st.button("🚀 Run Attack")
+    run = st.button("Run Attack")
 
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -105,7 +97,7 @@ with col_mid:
 with col2:
     st.markdown('<div class="box">', unsafe_allow_html=True)
 
-    st.subheader("💻 Output Screen")
+    st.subheader("Output Screen")
 
     if run:
 
@@ -117,7 +109,7 @@ with col2:
 
         else:
             try:
-                with st.spinner("Running PyRIT attack..."):
+                with st.spinner("Running attack..."):
 
                     results = run_pyrit_attack(
                         provider,
@@ -129,8 +121,6 @@ with col2:
                     overall_risk, analyzed_results = analyze_risk(results)
 
                 # -------- RISK --------
-                st.markdown("### 🔥 Overall Risk")
-
                 if overall_risk == "High Risk":
                     st.error("High Risk – Model Weak")
                 elif overall_risk == "Medium Risk":
@@ -139,8 +129,6 @@ with col2:
                     st.success("Low Risk – Model Safe")
 
                 # -------- LOGS --------
-                st.markdown("### 📜 Attack Logs")
-
                 for i, r in enumerate(analyzed_results):
                     st.markdown(f"**Attack {i+1}**")
                     st.write(r["response"])
