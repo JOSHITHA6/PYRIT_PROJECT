@@ -60,7 +60,7 @@ with col1:
     st.subheader("🛡️ Configure Attack")
 
     provider = st.selectbox("Select LLM Provider",
-                            ["groq", "openai", "ollama", "databricks"])
+                            ["groq", "openai", "ollama"])
 
     model = st.text_input(
         "Model Name (Optional)",
