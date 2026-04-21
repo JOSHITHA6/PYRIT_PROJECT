@@ -1,6 +1,6 @@
 import streamlit as st
-from backend.pyrit_wrapper import run_pyrit_attack
-from backend.risk_analyzer import analyze_risk
+from BACKEND.pyrit_wrapper import run_pyrit_attack
+from BACKEND.risk_analyzer import analyze_risk
 
 st.set_page_config(layout="wide")
 
