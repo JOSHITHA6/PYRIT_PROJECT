@@ -5,27 +5,26 @@ from BACKEND.risk_analyzer import analyze_risk
 st.set_page_config(layout="wide")
 
 # =========================
-# 🎨 GLOBAL CSS (CORRECT FIX)
+# 🎨 CSS (FIXED NEON UI)
 # =========================
 st.markdown("""
 <style>
 
-/* 🌌 FULL PAGE BACKGROUND */
+/* Background */
 .stApp {
     background-color: #020617;
 }
 
-/* 🔥 TARGET STREAMLIT MAIN CONTAINER (IMPORTANT FIX) */
+/* OUTER MAIN CONTAINER (NEON BORDER) */
 .block-container {
-    padding: 2rem 2rem;
-    border-radius: 18px;
     border: 2px solid rgba(56,189,248,0.4);
+    border-radius: 18px;
+    padding: 2rem;
     box-shadow: 0 0 25px rgba(56,189,248,0.6),
                 0 0 45px rgba(192,132,252,0.4);
-    background-color: #020617;
 }
 
-/* 🧱 INNER BOXES */
+/* INNER BOXES */
 .section-box {
     padding: 20px;
     border-radius: 14px;
@@ -33,13 +32,13 @@ st.markdown("""
     border: 1px solid rgba(255,255,255,0.08);
 }
 
-/* ➖ DIVIDER */
+/* DIVIDER */
 .divider {
-    border-left: 2px solid rgba(255,255,255,0.15);
+    border-left: 2px solid rgba(255,255,255,0.2);
     height: 100%;
 }
 
-/* 🎯 TITLE */
+/* TITLE */
 .title {
     text-align: center;
     font-size: 42px;
@@ -49,14 +48,14 @@ st.markdown("""
     -webkit-text-fill-color: transparent;
 }
 
-/* 🧾 SUBTITLE */
+/* SUBTITLE */
 .subtitle {
     text-align: center;
     color: #94a3b8;
     margin-bottom: 20px;
 }
 
-/* 🚀 BUTTON */
+/* BUTTON */
 .stButton>button {
     width: 100%;
     height: 48px;
@@ -76,11 +75,62 @@ st.markdown("""
 
 </style>
 """, unsafe_allow_html=True)
+
 # =========================
-# RIGHT PANEL
+# TITLE
+# =========================
+st.markdown('<div class="title">PyRIT – Red Teaming Tool</div>', unsafe_allow_html=True)
+st.markdown('<div class="subtitle">Test LLMs for vulnerabilities with adversarial prompts</div>', unsafe_allow_html=True)
+
+# =========================
+# LAYOUT
+# =========================
+col1, col_mid, col2 = st.columns([1, 0.03, 1])
+
+# =========================
+# LEFT PANEL (INPUT)
+# =========================
+with col1:
+    st.markdown('<div class="section-box">', unsafe_allow_html=True)
+
+    st.subheader("🛡️ CONFIGURE ATTACK")
+
+    provider = st.selectbox(
+        "Select the LLM",
+        ["groq", "openai", "ollama", "databricks"]
+    )
+
+    prompt = st.text_area(
+        "Enter the Prompt",
+        placeholder="Enter your adversarial prompt here..."
+    )
+
+    api_key = st.text_input(
+        "Enter API Key",
+        type="password",
+        placeholder="Required for most providers"
+    )
+
+    model = st.text_input(
+        "Model Name (Optional)",
+        placeholder="e.g. llama3-8b-8192 / gpt-3.5-turbo"
+    )
+
+    run = st.button("🚀 Run Attack")
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
+# =========================
+# CENTER DIVIDER
+# =========================
+with col_mid:
+    st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
+
+# =========================
+# RIGHT PANEL (OUTPUT)
 # =========================
 with col2:
-    st.markdown('<div class="inner-box">', unsafe_allow_html=True)
+    st.markdown('<div class="section-box">', unsafe_allow_html=True)
 
     st.subheader("💻 OUTPUT SCREEN")
 
@@ -105,7 +155,7 @@ with col2:
 
                     overall_risk, analyzed_results = analyze_risk(results)
 
-                # -------- RISK --------
+                # 🔥 RISK DISPLAY
                 st.markdown("### 🔥 Overall Risk")
 
                 if overall_risk == "High Risk":
@@ -115,7 +165,7 @@ with col2:
                 else:
                     st.success("🟢 Low Risk – Model Safe")
 
-                # -------- LOGS --------
+                # 📜 LOGS
                 st.markdown("### 📜 Attack Logs")
 
                 for i, r in enumerate(analyzed_results):
@@ -130,8 +180,3 @@ with col2:
         st.info("Run the model to see results")
 
     st.markdown('</div>', unsafe_allow_html=True)
-
-# =========================
-# 🔥 OUTER NEON BOX END
-# =========================
-st.markdown('</div>', unsafe_allow_html=True)
