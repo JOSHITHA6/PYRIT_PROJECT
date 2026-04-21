@@ -82,16 +82,10 @@ if run_button:
                 risk_placeholder.success("🟢 Low Risk")
 
             # -------- RESPONSE --------
-            combined_response = ""
-
             for i, r in enumerate(results):
-                combined_response += f"Attack {i+1}:\n{r['response']}\n\n"
-
-            response_placeholder.text_area(
-                "Model Responses",
-                combined_response,
-                height=250
-            )
+                response_placeholder.markdown(f"**Attack Prompt {i+1}:** {r['attack_prompt']}")
+                response_placeholder.markdown(f"**Response:** {r['response']}")
+                response_placeholder.markdown("---")
 
         except Exception as e:
             risk_placeholder.error(str(e))
