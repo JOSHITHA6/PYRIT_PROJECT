@@ -46,6 +46,7 @@ h1, h2, h3, h4, h5, h6, p, span, label, div {
 input, textarea {
     background-color: white !important;
     caret-color: black !important;
+    color: black !important;
 }
 
 /* Placeholder */
