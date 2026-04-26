@@ -14,6 +14,24 @@ st.markdown("""
 .stApp {
     background-color: white;
 }
+/* 🔝 Fix Streamlit header */
+header {
+    background-color: white !important;
+}
+
+/* Toolbar (top right icons area) */
+[data-testid="stToolbar"] {
+    background-color: white !important;
+}
+
+/* Ensure header text/icons are visible */
+[data-testid="stToolbar"] svg {
+    fill: black !important;
+}
+
+[data-testid="stToolbar"] button {
+    color: black !important;
+}
 
 /* Divider */
 .divider {
