@@ -14,29 +14,23 @@ st.markdown("""
 .stApp {
     background-color: white;
 }
-/* 🔝 Keep header black */
+/* 🔝 Fix Streamlit header */
 header {
-    background-color: #020617 !important; /* same dark color */
+    background-color: white !important;
 }
 
-/* Toolbar area */
+/* Toolbar (top right icons area) */
 [data-testid="stToolbar"] {
-    background-color: #020617 !important;
+    background-color: white !important;
 }
 
-/* Icons (menu, settings, etc.) */
+/* Ensure header text/icons are visible */
 [data-testid="stToolbar"] svg {
-    fill: white !important;
+    fill: black !important;
 }
 
-/* Buttons inside header */
 [data-testid="stToolbar"] button {
-    color: white !important;
-}
-
-/* Optional: hamburger/menu icon */
-button[title="Main menu"] svg {
-    fill: white !important;
+    color: black !important;
 }
 
 /* Divider */
