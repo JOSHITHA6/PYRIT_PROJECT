@@ -5,12 +5,17 @@ from BACKEND.risk_analyzer import analyze_risk
 st.set_page_config(layout="wide")
 
 # =========================
-# CSS (UPDATED TO LIGHT THEME)
+# CSS (LIGHT THEME FIX ONLY)
 # =========================
 st.markdown("""
 <style>
-.stApp { background-color: white; }
 
+/* Background */
+.stApp {
+    background-color: white;
+}
+
+/* Divider */
 .divider {
     width: 1.5px;
     background: rgba(0,0,0,0.2);
@@ -18,6 +23,7 @@ st.markdown("""
     margin: auto;
 }
 
+/* Titles */
 .title {
     text-align: center;
     font-size: 34px;
@@ -31,9 +37,9 @@ st.markdown("""
     margin-bottom: 20px;
 }
 
-/* Force all text to black */
-html, body, [class*="css"] {
-    color: black;
+/* Force text visibility (safe override) */
+h1, h2, h3, h4, h5, h6, p, span, label, div {
+    color: black !important;
 }
 
 /* Inputs */
@@ -42,13 +48,23 @@ input, textarea {
     color: black !important;
 }
 
+/* Placeholder FIX (important) */
+input::placeholder, textarea::placeholder {
+    color: #6b7280 !important;
+    opacity: 1 !important;
+}
+
 /* Selectbox */
 div[data-baseweb="select"] {
     background-color: white !important;
     color: black !important;
 }
 
-/* Button (kept gradient, readable) */
+div[data-baseweb="select"] span {
+    color: black !important;
+}
+
+/* Button */
 .stButton>button {
     width: 100%;
     height: 45px;
@@ -57,6 +73,7 @@ div[data-baseweb="select"] {
     color: white;
     border: none;
 }
+
 </style>
 """, unsafe_allow_html=True)
 
