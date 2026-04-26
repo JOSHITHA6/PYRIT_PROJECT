@@ -5,7 +5,7 @@ from BACKEND.risk_analyzer import analyze_risk
 st.set_page_config(layout="wide")
 
 # =========================
-# CSS (LIGHT THEME + DROPDOWN FIX)
+# CSS (LIGHT THEME + DROPDOWN + ARROW FIX)
 # =========================
 st.markdown("""
 <style>
@@ -86,6 +86,12 @@ li[role="option"] {
 /* Hover */
 li[role="option"]:hover {
     background-color: #f1f5f9 !important;
+}
+
+/* 🔽 FIX DROPDOWN ARROW */
+div[data-baseweb="select"] svg {
+    fill: black !important;
+    color: black !important;
 }
 
 /* Button */
