@@ -5,7 +5,7 @@ from BACKEND.risk_analyzer import analyze_risk
 st.set_page_config(layout="wide")
 
 # =========================
-# CSS (LIGHT THEME FIX ONLY)
+# CSS (LIGHT THEME + DROPDOWN FIX)
 # =========================
 st.markdown("""
 <style>
@@ -37,7 +37,7 @@ st.markdown("""
     margin-bottom: 20px;
 }
 
-/* Force text visibility (safe override) */
+/* Force text visibility */
 h1, h2, h3, h4, h5, h6, p, span, label, div {
     color: black !important;
 }
@@ -48,20 +48,44 @@ input, textarea {
     color: black !important;
 }
 
-/* Placeholder FIX (important) */
+/* Placeholder */
 input::placeholder, textarea::placeholder {
     color: #6b7280 !important;
     opacity: 1 !important;
 }
 
-/* Selectbox */
+/* 🔽 SELECTBOX FIX */
 div[data-baseweb="select"] {
     background-color: white !important;
     color: black !important;
 }
 
+/* Selected value */
+div[data-baseweb="select"] > div {
+    background-color: white !important;
+    color: black !important;
+}
+
+/* Text inside dropdown */
 div[data-baseweb="select"] span {
     color: black !important;
+}
+
+/* Dropdown list */
+ul[role="listbox"] {
+    background-color: white !important;
+    color: black !important;
+}
+
+/* Options */
+li[role="option"] {
+    background-color: white !important;
+    color: black !important;
+}
+
+/* Hover */
+li[role="option"]:hover {
+    background-color: #f1f5f9 !important;
 }
 
 /* Button */
@@ -94,13 +118,16 @@ col1, col_mid, col2 = st.columns([1, 0.02, 1])
 with col1:
     st.subheader("🛡️ Configure Attack")
 
-    provider = st.selectbox("Select LLM Provider",
-                            ["groq", "openai", "ollama"])
+    provider = st.selectbox(
+        "Select LLM Provider",
+        ["groq", "openai", "ollama"]
+    )
 
     model = st.text_input(
         "Model Name (Optional)",
         placeholder="Leave empty OR enter your own model"
     )
+
     api_key = st.text_input("API Key", type="password")
 
     prompt = st.text_area("Enter Prompt")
