@@ -5,15 +5,15 @@ from BACKEND.risk_analyzer import analyze_risk
 st.set_page_config(layout="wide")
 
 # =========================
-# CSS
+# CSS (UPDATED TO LIGHT THEME)
 # =========================
 st.markdown("""
 <style>
-.stApp { background-color: #020617; }
+.stApp { background-color: white; }
 
 .divider {
     width: 1.5px;
-    background: rgba(255,255,255,0.3);
+    background: rgba(0,0,0,0.2);
     height: 100%;
     margin: auto;
 }
@@ -22,15 +22,33 @@ st.markdown("""
     text-align: center;
     font-size: 34px;
     font-weight: bold;
-    color: #e2e8f0;
+    color: black;
 }
 
 .subtitle {
     text-align: center;
-    color: #94a3b8;
+    color: #374151;
     margin-bottom: 20px;
 }
 
+/* Force all text to black */
+html, body, [class*="css"] {
+    color: black;
+}
+
+/* Inputs */
+input, textarea {
+    background-color: white !important;
+    color: black !important;
+}
+
+/* Selectbox */
+div[data-baseweb="select"] {
+    background-color: white !important;
+    color: black !important;
+}
+
+/* Button (kept gradient, readable) */
 .stButton>button {
     width: 100%;
     height: 45px;
@@ -69,8 +87,6 @@ with col1:
     api_key = st.text_input("API Key", type="password")
 
     prompt = st.text_area("Enter Prompt")
-
-    
 
     run = st.button("🚀 Run Attack")
 
