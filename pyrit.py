@@ -2,11 +2,16 @@ import streamlit as st
 from BACKEND.pyrit_wrapper import run_pyrit_attack
 from BACKEND.risk_analyzer import analyze_risk
 
+# NEW IMPORTS: batch processor for automation mode
+from utils.batch_processor import run_batch_assessment, get_csv_filename
+
 st.set_page_config(layout="wide")
 
 # =========================
 # CSS (LIGHT THEME + DROPDOWN + ARROW FIX)
+# Preserved exactly as original
 # =========================
+
 st.markdown("""
 <style>
 
@@ -14,6 +19,7 @@ st.markdown("""
 .stApp {
     background-color: white;
 }
+
 /* 🔝 Fix Streamlit header */
 header {
     background-color: white !important;
@@ -128,21 +134,37 @@ div[data-baseweb="select"] svg {
 
 # =========================
 # TITLE
+# Preserved exactly as original
 # =========================
+
 st.markdown('<div class="title">🚨 PyRIT – Red Teaming Tool</div>', unsafe_allow_html=True)
 st.markdown('<div class="subtitle">Test LLMs for vulnerabilities with adversarial prompts</div>', unsafe_allow_html=True)
 
 # =========================
 # LAYOUT
+# Preserved exactly as original
 # =========================
+
 col1, col_mid, col2 = st.columns([1, 0.02, 1])
 
 # =========================
-# LEFT
+# LEFT COLUMN
 # =========================
+
 with col1:
     st.subheader("🛡️ Configure Attack")
 
+    # ── NEW: Radio button for input mode selection ──
+    # Added at the top, before all existing inputs
+    input_mode = st.radio(
+        "Select Input Mode",
+        options=["1. Enter manually", "2. Automate (Built-in 100 prompts)"],
+        index=0,          # default: manual
+        horizontal=True   # side by side layout
+    )
+    # ── END NEW ──
+
+    # These three inputs are ALWAYS visible in both modes (LLM always needs them)
     provider = st.selectbox(
         "Select LLM Provider",
         ["groq", "openai", "ollama"]
@@ -155,34 +177,46 @@ with col1:
 
     api_key = st.text_input("API Key", type="password")
 
-    prompt = st.text_area("Enter Prompt")
+    # ── NEW: Show different input/button based on selected mode ──
 
-    run = st.button("🚀 Run Attack")
+    if input_mode == "1. Enter manually":
+        # EXISTING behaviour — prompt textarea + run attack button (unchanged)
+        prompt = st.text_area("Enter Prompt")
+        run = st.button("🚀 Run Attack")
+        run_batch = False  # not in batch mode
+
+    else:
+        # NEW automation mode — no prompt textarea, different button
+        prompt = None
+        run = False        # not in manual mode
+        run_batch = st.button("🚀 Run Risk Assessment on 100 Prompts")
+
+    # ── END NEW ──
 
 # =========================
 # DIVIDER
+# Preserved exactly as original
 # =========================
+
 with col_mid:
     st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
 
 # =========================
-# RIGHT
+# RIGHT COLUMN
 # =========================
+
 with col2:
     st.subheader("📊 Output")
 
+    # ── EXISTING: Manual mode logic (visually identical, risk now uses embeddings internally) ──
     if run:
-
         if provider != "ollama" and not api_key:
             st.warning("API key required")
-
         elif not prompt:
             st.warning("Enter prompt")
-
         else:
             try:
                 with st.spinner("Running attack..."):
-
                     results = run_pyrit_attack(
                         provider,
                         api_key,
@@ -190,10 +224,11 @@ with col2:
                         prompt
                     )
 
+                    # analyze_risk now uses embedding detection internally
+                    # (BACKEND/risk_analyzer.py was updated — call is unchanged)
                     overall_risk, analyzed_results = analyze_risk(results)
 
                 st.markdown("### 🔥 Risk")
-
                 if overall_risk == "High Risk":
                     st.error("High Risk")
                 elif overall_risk == "Medium Risk":
@@ -202,7 +237,6 @@ with col2:
                     st.success("Low Risk")
 
                 st.markdown("### 📜 Logs")
-
                 for i, r in enumerate(analyzed_results):
                     st.write(f"Attack {i+1}")
                     st.write(r["response"])
@@ -211,5 +245,34 @@ with col2:
             except Exception as e:
                 st.error(str(e))
 
+    # ── NEW: Automation mode logic ──
+    elif run_batch:
+        if provider != "ollama" and not api_key:
+            st.warning("API key required")
+        else:
+            try:
+                # run_batch_assessment shows its own progress bar inside
+                csv_bytes = run_batch_assessment(
+                    provider=provider,
+                    api_key=api_key,
+                    model=model if model else None
+                )
+
+                # Show download button after processing completes
+                filename = get_csv_filename()
+                st.success("✅ Assessment complete! Download your results below.")
+                st.download_button(
+                    label="⬇️ Download CSV Results",
+                    data=csv_bytes,
+                    file_name=filename,
+                    mime="text/csv"
+                )
+
+            except Exception as e:
+                st.error(str(e))
+
+    # ── END NEW ──
+
     else:
+        # Default state — preserved exactly as original
         st.info("Run model to see results")
