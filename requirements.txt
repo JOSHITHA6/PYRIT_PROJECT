@@ -4,4 +4,12 @@ groq
 openai
 google-generativeai
 
+# ── NEW: Added for embedding-based risk detection ──
+sentence-transformers
+scikit-learn
+pandas
+numpy
+torch
+ 
+
 
