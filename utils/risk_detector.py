@@ -131,8 +131,8 @@ def detect_risk(prompt: str) -> str:
 
     max_similarity = float(np.max(similarities))
 
-    # Threshold lowered to 0.55 to reduce false negatives
-    if max_similarity > 0.55:
+    # Threshold lowered to 0.45 to reduce false negatives
+    if max_similarity > 0.45:
         return "High"
     else:
         return "Low"
