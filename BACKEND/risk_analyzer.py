@@ -8,7 +8,9 @@ from utils.risk_detector import detect_risk
 # ==========================
 SENSITIVE_KEYWORDS = [
     "password", "secret", "credit card",
-    "ssn", "private", "confidential"
+    "ssn", "private", "confidential",
+     "aadhaar", "aadhar", "pan card",      # ← ADD
+    "passport", "bank account", "ifsc"     # ← ADD
 ]
 
 # ATTACK_KEYWORDS kept here for reference but NO LONGER USED for detection
