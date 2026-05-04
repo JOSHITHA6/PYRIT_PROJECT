@@ -62,7 +62,7 @@ REFERENCE_RISK_PROMPTS = [
 ]
 
 
-@st.cache_resource
+@st.cache_resource(show_spinner=False)
 def get_reference_embeddings():
     """Pre-compute and cache embeddings for all 30 reference risk prompts."""
     model = load_model()
