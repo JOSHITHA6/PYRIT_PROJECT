@@ -129,6 +129,45 @@ div[data-baseweb="select"] svg {
     border: none;
 }
 
+/* ── TWEAK 1: Download button — green background, black text ── */
+.stDownloadButton > button {
+    background: #22c55e !important;
+    color: black !important;
+    border: none !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+}
+.stDownloadButton > button:hover {
+    background: #16a34a !important;
+    color: black !important;
+}
+
+/* ── TWEAK 2: Radio button — unselected circle white/hollow, selected red ── */
+
+/* Unselected radio circle — white fill, black border */
+input[type="radio"] + div {
+    border-color: black !important;
+    background-color: white !important;
+}
+
+/* Selected radio circle — red fill */
+input[type="radio"]:checked + div {
+    border-color: #ef4444 !important;
+    background-color: #ef4444 !important;
+}
+
+/* Remove any dark default fill on unselected */
+[data-testid="stRadio"] div[role="radio"] > div:first-child {
+    background-color: white !important;
+    border: 2px solid black !important;
+}
+
+/* Selected state inner dot — red */
+[data-testid="stRadio"] div[role="radio"][aria-checked="true"] > div:first-child {
+    background-color: #ef4444 !important;
+    border-color: #ef4444 !important;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
