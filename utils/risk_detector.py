@@ -7,7 +7,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 # Model: all-MiniLM-L6-v2 via sentence-transformers (FREE, local)
 # ============================================================
 
-@st.cache_resource
+@st.cache_resource(show_spinner=False)
 def load_model():
     """Load and cache the sentence transformer model (downloads once ~90MB)."""
     from sentence_transformers import SentenceTransformer
