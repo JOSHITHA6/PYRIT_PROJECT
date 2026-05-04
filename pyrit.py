@@ -142,30 +142,26 @@ div[data-baseweb="select"] svg {
     color: black !important;
 }
 
-/* ── TWEAK 2: Radio button — unselected circle white/hollow, selected red ── */
+/* ── TWEAK 2: Radio button — unselected circle white, selected circle red, NO label highlight ── */
 
-/* Unselected radio circle — white fill, black border */
-input[type="radio"] + div {
-    border-color: black !important;
-    background-color: white !important;
+/* Remove Streamlit's default label background highlight completely */
+[data-testid="stRadio"] label {
+    background-color: transparent !important;
+    padding: 0 !important;
 }
 
-/* Selected radio circle — red fill */
-input[type="radio"]:checked + div {
-    border-color: #ef4444 !important;
-    background-color: #ef4444 !important;
-}
-
-/* Remove any dark default fill on unselected */
+/* Unselected circle — white fill, grey border */
 [data-testid="stRadio"] div[role="radio"] > div:first-child {
     background-color: white !important;
-    border: 2px solid black !important;
+    border: 2px solid #6b7280 !important;
+    box-shadow: none !important;
 }
 
-/* Selected state inner dot — red */
+/* Selected circle — red fill, red border, no label background */
 [data-testid="stRadio"] div[role="radio"][aria-checked="true"] > div:first-child {
     background-color: #ef4444 !important;
     border-color: #ef4444 !important;
+    box-shadow: none !important;
 }
 
 </style>
